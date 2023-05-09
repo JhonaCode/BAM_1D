@@ -32,7 +32,7 @@ vertRes=#lev#
 
 s="00z15Feb2014"
 ## end date
-e="00z10May2014"
+e="00z30Mar2014"
 
 
 strip=(Y m d H)
@@ -89,14 +89,11 @@ eof
 ls ${fdir}*${t0[0]}*${t0[0]}*F.fct.*L${vertRes}.ctl > lista
 
 
-echo ${fdir} 
-
-
 #cdo settaxis,<startdate>,<starttime>,<increment> -setcalendar,360_day -importbinary  ifile.ctl  ofile.nc
 
-if [ ! -d ${fdir}ncfiles ]; then
-        mkdir -p ${fdir}ncfiles  
-fi
+#if [ ! -d ${fdir}ncfiles ]; then
+#        mkdir -p ${fdir}ncfiles  
+#fi
 
 #To put the date time in the file.
 #Depends on the initial date
@@ -126,16 +123,20 @@ for x in `cat lista`
         
 done
 
+
 rm temp.nc
+rm lista 
+
+mkdir binary_files
+
+mv ${fdir}*${t0[0]}* binary_files
+
+cd ncfiles
 
 #Juntar todos os .nc em um unico binario. 
-#maximo 256
-cdo mergetime *.nc bam1d.nc
+cdo mergetime *.nc bam_1d!!label_nc!!.nc
 
 rm GFCTNMC*.nc
-
-#Juntar todos os .nc em um unico binario se todos estiver em ordem 
-#cat *.ct bam1d.nc
 
 
 

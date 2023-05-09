@@ -3,7 +3,8 @@
 # Your files location
 
 file_l = "#filenc#"  
-file_outnc = "#fileoutnc#"  
+
+file_o = "#figout#"  
 
 #First day of the experiment 
 #%%%%Y%%M%%D%%H
