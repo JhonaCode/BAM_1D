@@ -46,14 +46,17 @@ lev=##lev##
 
 
 #ctl files to transform in nc
-fctl=$DataOut #Diretorio de saida dos arquivos 
-fnc=$DataOut
+fctl=${DataOut} #Diretorio de saida dos arquivos 
+fnc=${DataOut}
+figout=${DataOut}figures_out
 
 
 echo "this is the path of the nc files $fnc" 
 
 #Name nc specific file 
-labeloutnc=bam1d_out_$Elabel
+
+labeloutnc=bam1d_out$Elabel
+
 outnc=${fnc}ncfiles/$labeloutnc
 
 ###############################################
@@ -61,8 +64,9 @@ outnc=${fnc}ncfiles/$labeloutnc
 #Tranform ctl to nc
 # if it does not exits.
 #Does not like of spaces in defintion 
-File="${fctl}ncfiles"
 
+#File="${fctl}ncfiles"
+File="${fctl}ncfiles"
 
 # To check if the ncfiles exits 
 
@@ -71,16 +75,20 @@ if  [ -d "$File" ]; then
 
         echo "ncfiles/*.nc exist"
 else 
+
         echo "ncfiles/*.nc not exist, will be created"
+
+        mkdir -p ${fctl}ncfiles  
 
 
         sed  -e "s;#dirctl#;'${fctl}';g" \
              -e "s;#dirnc#;'${fnc}';g" \
              -e "s;#lev#;'${lev}';g" \
-             ${fpython}Create2NetCDF.sh > ${DataOut}nccreate_$Elabel.sh 
+             -e "s;!!label_nc!!;'$Elabel';g" \
+             ${fpython}Create2NetCDF.sh > ${DataOut}nccreate$Elabel.sh 
         
-        chmod 777 ${DataOut}nccreate_$Elabel.sh 
-        ${DataOut}_nccreate$Elabel.sh
+        chmod 777 ${DataOut}nccreate$Elabel.sh 
+        ${DataOut}nccreate$Elabel.sh
 fi
 
 
@@ -91,20 +99,17 @@ fi
 
 #Copy the funciton necessary to run the python file 
 
-cp ${fpython}Ncdump.py          ${DataOut}
-cp ${fpython}diurnal.py         ${DataOut}
-cp ${fpython}main_bam1d.py      ${DataOut}
-#cp ${fpython}variabletoload  ${DataOut}
-cp ${fpython}variabletoload_shallow.py  ${DataOut}
-cp ${fpython}plotparameters.py  ${DataOut}
+cp ${fpython}source_python/ -r    ${DataOut}
+#cp ${fpython}main_bam1.py         ${DataOut}
 
-sed -e  "s;#filenc#;${fnc}ncfiles/;g" \
-    -e  "s;#fileoutnc#;${outnc};g" \
-    ${fpython}Parametersnccreate_shallow.py > ${DataOut}Parameters_$Elabel.py 
+sed -e  "s;#filenc#;${fnc}ncfiles/bam_1d$Elabel.nc;g" \
+    -e  "s;#figout#;${figout};g" \
+    ${fpython}Parametersnccreate_shallow.py > ${DataOut}source_python/Parameters$Elabel.py 
+
 
 sed -e  "s;##label##;$Elabel;g" \
     -e  "s;##varload##;_shallow;g" \
-    ${fpython}main_bam1d.py > ${DataOut}main_bam_1d_$Elabel.py 
+    ${fpython}main_bam_1d.py > ${DataOut}main_bam_1d$Elabel.py 
 
 
 File2="$outnc.nc"
@@ -115,12 +120,12 @@ if [ -f "$File2" ]; then
         echo "${outnc}.nc  exist"
    
 else 
-        sed -e "s;#Parametersnccreated#;Parameters_$Elabel;g" \
-        ${fpython}nccreate.py > ${DataOut}nc_$Elabel.py 
+        sed -e "s;#Parametersnccreated#;Parameters$Elabel;g" \
+        ${fpython}nccreate.py > ${DataOut}nc$Elabel.py 
 
         echo "${outnc}.nc  not exist,will be created"
 
-        python ${DataOut}nc_$Elabel.py
+        #python ${DataOut}nc_$Elabel.py
 
 fi
 
