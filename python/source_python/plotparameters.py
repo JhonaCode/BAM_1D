@@ -43,14 +43,14 @@ def axis_format(fig,ax):
     locale.setlocale(locale.LC_ALL, 'en_IN')
 
     #minor axis
-    formatter = nc_time_axis.CFTimeFormatter("%d", "noleap")
-    locator   = nc_time_axis.NetCDFTimeDateLocator(15,"noleap")
+    formatter = nc_time_axis.CFTimeFormatter("%d", "standard")
+    locator   = nc_time_axis.NetCDFTimeDateLocator(15,"standard")
     ax.xaxis.set_minor_formatter(formatter)
     ax.xaxis.set_minor_locator(locator)
 
     # Set major
-    locator=nc_time_axis.NetCDFTimeDateLocator(1,"noleap")
-    formatter = nc_time_axis.CFTimeFormatter("\n%b", "noleap")
+    locator=nc_time_axis.NetCDFTimeDateLocator(1,"standard")
+    formatter = nc_time_axis.CFTimeFormatter("\n%b", "standard")
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
 

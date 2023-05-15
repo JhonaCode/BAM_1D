@@ -4,6 +4,47 @@ import  numpy       as     np
 import datetime as dt
 
 
+def diurnal_function_goa(time,variable,nh,hi): 
+
+    #Number of hour
+    ndh     = 24
+#Hour array
+    hour    = np.zeros(int(ndh/nh))
+    #Sum variable to the mean 
+    varsum   = np.zeros(int(ndh/nh))
+    #Number of  time thar variable was sum 
+    cont    = np.zeros(int(ndh/nh))
+
+    
+    #Lengh of the time array to search
+    ndtp    = len(time) 
+    
+
+    conh=0
+
+    #print(time[:])
+
+
+    for i in range(0,ndtp):
+
+        #print(time[i].hour, ndtp)
+    
+        conh=0
+
+        for j in range(hi,ndh,nh):
+
+            if int(time[i].hour)==j : 
+    
+                hour[conh]  = j
+                varsum[conh]= varsum[conh]+variable[i]
+                cont[conh]  = cont[conh]+1
+
+            conh+=1
+    
+    meanvar = varsum/cont
+
+    return meanvar,hour 
+
 def diurnal_function(time,variable): 
 
     
@@ -45,7 +86,7 @@ def diurnal_function(time,variable):
 
 def diurnal_function_exp(time,variable): 
 
-#print timed.datetime.hour
+    #print timed.datetime.hour
 
     #Number of hour
     ndh     = 24
